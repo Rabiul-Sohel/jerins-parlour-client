@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../Shared/Navbar';
 import Container from '../Shared/Container';
 import Banner from '../Pages/Home/Banner/Banner';
+import { Toaster } from 'react-hot-toast';
 
 const MainLayout = () => {
     const location = useLocation()

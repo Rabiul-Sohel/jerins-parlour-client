@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import Container from "../../Shared/Container";
 import Footer from "../../Shared/Footer";
 import App from "./App";
