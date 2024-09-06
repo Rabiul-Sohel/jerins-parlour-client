@@ -5,7 +5,7 @@ import Animation from "../Animation";
 
 const Quality = () => {
     return (
-        <div className="bg-[#FFF8F5] flex items-center min-h-[70vh]">
+        <div className="bg-[#FFF8F5] flex items-center">
             <Container>
                 <Animation>
                     <div className="flex gap-20 py-16">

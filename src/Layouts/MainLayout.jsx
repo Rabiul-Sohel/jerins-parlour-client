@@ -28,7 +28,6 @@ const MainLayout = () => {
         return (
             <Container>
                 <div>
-                    <Navbar></Navbar>
                     <Outlet></Outlet>
                 </div>
             </Container>

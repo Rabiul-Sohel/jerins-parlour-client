@@ -5,12 +5,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Hooks/useAuth";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 
 const Signup = () => {
     const [error, setError] = useState('')
     const { createUser } = useAuth()
     const navigate = useNavigate()
+    const axiosPublic = useAxiosPublic()
     const {
         register,
         handleSubmit,
@@ -25,8 +27,12 @@ const Signup = () => {
         if (data.password !== data.confirmPassword) {
             setError('Password not matched')
         } else {
+            
+           
             createUser(data.email, data.password)
                 .then(res => {
+                    axiosPublic.post('/users', user)
+                    .then(res => console.log(res.data))
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
