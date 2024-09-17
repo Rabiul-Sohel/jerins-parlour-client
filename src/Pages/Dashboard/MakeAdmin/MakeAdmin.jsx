@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
-import useAuth from "../../../Hooks/useAuth";
-import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import useGetUser from "../../../Hooks/useGetUser";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import useAuth from "../../../Hooks/useAuth";
 
 
 const MakeAdmin = () => {
@@ -29,7 +29,7 @@ const MakeAdmin = () => {
                       });
                 }
             })
-    }
+    } 
     return (
         <div>
             <div className="flex justify-between px-10 py-4">

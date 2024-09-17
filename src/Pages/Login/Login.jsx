@@ -1,14 +1,18 @@
 import logoImage from '../../assets/logo.png'
 import googleIcon from '../../assets/icons/Group 573.png'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import useAuth from '../../Hooks/useAuth';
 import Swal from 'sweetalert2';
 import toast, { Toaster } from 'react-hot-toast';
+import useAuth from '../../Hooks/useAuth';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useState } from 'react';
 
 const Login = () => {
     const { signinUser } = useAuth()
     const navigate = useNavigate()
+    const location = useLocation()
+    const [passVisible, setPassVisible] = useState(false)
     const {
         register,
         handleSubmit,
@@ -28,15 +32,16 @@ const Login = () => {
                     title: "Login Successfull",
                     showConfirmButton: false,
                     timer: 1500
-                  });
-                navigate('/')
+                });
+                navigate(location.state? location.state : '/' )
             })
             .catch(err => console.log(err))
     }
     return (
         <div className='min-h-screen flex justify-center items-center font-sans'>
             <div className='text-center space-y-6'>
-                <img className='w-40 mb-12 mx-auto' src={logoImage} alt="" />
+                <Link to={'/'} className='hover:animate-pulse'>
+                    <img className='w-40 mb-12 mx-auto' src={logoImage} alt="" /></Link>
                 <h1 className="text-5xl font-bold">Login now!</h1>
                 <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                     <form onSubmit={handleSubmit(onSubmit)} className="card-body">
@@ -53,7 +58,15 @@ const Login = () => {
                             <label className="label">
                                 <span className="label-text">Password</span>
                             </label>
-                            <input {...register('password', { required: 'Password is required' })} type="password" placeholder="password" className="input input-bordered" />
+                            <input {...register('password', { required: 'Password is required' })} type={passVisible ? 'text' : 'password'} placeholder="password" className="input input-bordered " />
+                            <div className='absolute bottom-[134px]  right-14 cursor-pointer '>
+                                {
+                                    !passVisible && <FaEye onClick={()=>setPassVisible(!passVisible)}></FaEye>
+                                }
+                                {
+                                    passVisible && <FaEyeSlash onClick={()=>setPassVisible(!passVisible)}></FaEyeSlash>
+                                }
+                            </div>
                             {
                                 errors.password && <p className='text-left'> {errors.password.message} </p>
                             }
@@ -79,9 +92,9 @@ const Login = () => {
                 </div>
 
             </div>
-           
+
         </div>
-        
+
     );
 };
 

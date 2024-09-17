@@ -1,11 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import googleIcon from '../../assets/icons/Group 573.png'
-import { FaFacebook } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaFacebook, FaUpload } from "react-icons/fa";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import useAuth from "../../Hooks/useAuth";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import useAuth from "../../Hooks/useAuth";
+import { TbCloudUpload } from "react-icons/tb";
+import axios from "axios";
 
 
 const Signup = () => {
@@ -13,33 +15,75 @@ const Signup = () => {
     const { createUser } = useAuth()
     const navigate = useNavigate()
     const axiosPublic = useAxiosPublic()
+    const [imagePreview, setImagePreview] = useState(null)
+    const [imageFile, setImageFile] = useState(null)
+    const [imageUrl, setImageUrl] = useState(null)
+    const [passVisible, setPassVisible] = useState(false)
+    const [conPassVisible, setConPassVisible] = useState(false)
+
+
+
     const {
         register,
         handleSubmit,
         formState: { errors },
         reset
     } = useForm()
+
+    const handleImageChange = e => {
+        // console.log(e.target.files[0]);
+        const file = e.target.files[0]
+        setImageFile(file)
+        if (file) {
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setImagePreview(reader.result)
+            }
+            reader.readAsDataURL(file)
+        }
+    }
     const onSubmit = data => {
+        const imageApi = import.meta.env.VITE_IMG_API_KEY
+        const formData = new FormData()
+        // const imageFile = data.image[0]
+        formData.append('image', imageFile)
+        console.log(imageFile);
+
+        if (imageFile) {
+            axios.post(`https://api.imgbb.com/1/upload?key=${imageApi}`, formData)
+                .then(res => {
+                    // console.log(res.data.data);
+                    if (res.data.success) {
+                        setImageUrl(res.data.data.url)
+                    }
+                })
+        }
+
         const user = {
             name: data.firstName + ' ' + data.lastName,
-            email: data.email
+            email: data.email,
+            image: imageUrl
         }
+        // if(imageUrl){
+        //     user.image = imageUrl
+        // }
+        console.log(user);
         if (data.password !== data.confirmPassword) {
             setError('Password not matched')
         } else {
-            
-           
+
+
             createUser(data.email, data.password)
                 .then(res => {
                     axiosPublic.post('/users', user)
-                    .then(res => console.log(res.data))
+                        .then(res => console.log(res.data))
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
                         title: "User created successfully",
                         showConfirmButton: false,
                         timer: 1500
-                      });
+                    });
                     setError('')
                     reset()
                     navigate('/')
@@ -49,6 +93,7 @@ const Signup = () => {
         }
 
     };
+
     // const handleUserSignup = (event)=>{
     //     event.preventDefault();
     //     const form = event.target;
@@ -93,15 +138,56 @@ const Signup = () => {
                                 errors.email && <p role="alert"> {errors.email.message} </p>
                             }
                         </div>
+                        <div className="flex items-center  text-left">
+                            {/* <!-- Label for custom file input --> */}
+
+                            <label className="bg-[#FFEAF3] text-[#F63E7B] px-3 py-2 outline outline-1 rounded-md cursor-pointer hover:bg-[#fcf0f6]">
+                                <span className='flex  gap-2 items-center'> <TbCloudUpload className='text-2xl' />  Upload image</span>
+                                {/* <!-- File input hidden but accessible --> */}
+                                <input {...register('image')} onChange={(e) => handleImageChange(e)} type="file" className="hidden" />
+
+                            </label>
+
+
+                            {/* <!-- Placeholder for the file name --> */}
+                            {/* <span className="ml-2" id="file-name">No file selected</span> */}
+                        </div>
+                        <div>
+                            {
+                                imagePreview && (
+                                    <img className="w-24 " src={imagePreview} alt="" />
+                                )
+                            }
+                        </div>
                         <div className="form-control">
-                            <input {...register('password', { required: 'Password is required' })} name="password" type="password" placeholder="Password" className="border-b bg-base-100 py-2" />
+
+                            <input {...register('password', { required: 'Password is required' })} name="password" type={passVisible ? 'text' : 'password'} placeholder="Password" className="border-b bg-base-100 py-2  " />
+                            <div className="relative -top-6 -right-80 cursor-pointer">
+                                {
+                                    !passVisible && <FaEye onClick={()=>setPassVisible(!passVisible)} ></FaEye>
+                                }
+                                {
+                                    passVisible && <FaEyeSlash onClick={()=>setPassVisible(!passVisible)}></FaEyeSlash>
+                                }
+
+                            </div>
+
                             {
                                 errors.password && <p> {errors.password.message} </p>
                             }
                         </div>
                         <div className="form-control">
-                            <input {...register('confirmPassword')} name="confirmPassword" type="password" placeholder="Confirm Password" className="border-b bg-base-100 py-2" />
+                            <input {...register('confirmPassword')} name="confirmPassword" type={conPassVisible ? 'text': 'password'} placeholder="Confirm Password" className="border-b bg-base-100 py-2" />
                         </div>
+                        <div className="relative -top-10 -right-80 cursor-pointer">
+                                {
+                                    !conPassVisible && <FaEye onClick={()=>setConPassVisible(!conPassVisible)} ></FaEye>
+                                }
+                                {
+                                    conPassVisible && <FaEyeSlash onClick={()=>setConPassVisible(!conPassVisible)}></FaEyeSlash>
+                                }
+
+                            </div>
                         <div>
                             {
                                 error && <p> {error} </p>
@@ -112,7 +198,7 @@ const Signup = () => {
                         </div>
                     </form>
                     <div className="text-center">
-                        <h5>Already have an account?<Link className="text-[#F63E7B] ml-1">Login</Link> </h5>
+                        <h5>Already have an account?<Link to='/login' className="text-[#F63E7B] ml-1">Login</Link> </h5>
                     </div>
                 </div>
                 <div className="my-5 flex items-center space-x-2 w-5/6 mx-auto">

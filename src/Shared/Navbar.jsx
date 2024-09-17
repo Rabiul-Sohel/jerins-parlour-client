@@ -4,19 +4,36 @@ import Button from "./Button";
 import { useContext } from "react";
 import { AuthContext } from "../Providers/AuthProviders";
 import useAuth from "../Hooks/useAuth";
+import Swal from "sweetalert2";
+import useGetUser from "../Hooks/useGetUser";
 
 
 const Navbar = () => {
-    const { user, logoutUser } = useAuth()
+    // const { user, logoutUser } = useAuth()
+    const authInfo = useAuth()
+    const user = authInfo?.user
+    const logoutUser = authInfo?.logoutUser
+    const [currentUser] = useGetUser()
 
     const handleLogout = ()=>{
         logoutUser()
-            .then(res => console.log(res))
+            .then(res => {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Logged out successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+            })
             .catch(err => console.log(err))
     }
     const navOptions = <>
         <li>
             <NavLink to='/'>Home</NavLink>
+        </li>
+        <li>
+            <NavLink to='dashboard/dashboard'>Dashboard</NavLink>
         </li>
         <li>
             <NavLink to='/portfolio'>Our Portfolio</NavLink>
@@ -69,15 +86,15 @@ const Navbar = () => {
                                 <div className="w-10 rounded-full">
                                     <img
                                         alt="Tailwind CSS Navbar component"
-                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                        src={currentUser.image} />
                                 </div>
                             </div>
                             <ul
                                 tabIndex={0}
                                 className="menu menu-sm dropdown-content bg-white rounded-box z-[1] mt-3 w-52 p-2 shadow">
                                 <li>
-                                    <Link to='dashboard/dashboard' className="justify-between">
-                                        Dashbord
+                                    <Link to='' className="justify-between">
+                                        {currentUser.name}
                                         <span className="badge">New</span>
                                     </Link>
                                 </li>

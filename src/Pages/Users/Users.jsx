@@ -1,6 +1,6 @@
 
-import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
 
 const Users = () => {
     const axiosSecure = useAxiosSecure()
@@ -8,15 +8,17 @@ const Users = () => {
     const {data:users=[]} = useQuery({
         queryKey: ['userData'],
         queryFn: async()=>{
-            const response = await axiosSecure.get('/users', {
-                headers:{
-                    Authorization: `Bearer ${token}`
+            const response = await axiosSecure.get('/users',
+                {
+                    headers:{
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            })
+            )
             return response.data
         }
     })
-    console.log(users);
+   
     return (
         <div>
             <h3>This is users page</h3>

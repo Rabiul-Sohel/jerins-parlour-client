@@ -6,6 +6,8 @@ import Banner from "./Banner/Banner";
 import Quality from "./Quality/Quality";
 import Services from "./Services/Services";
 import { Helmet } from "react-helmet-async";
+import Review from "./Review/Review";
+import SendMessage from "./Message/SendMessage";
 
 
 const Home = () => {
@@ -16,7 +18,10 @@ const Home = () => {
             </Helmet>
             <Services></Services>
             <Quality></Quality> 
+            <Review></Review>
+            <SendMessage></SendMessage>
             <Footer></Footer>
+
         </div>
     );
 };
