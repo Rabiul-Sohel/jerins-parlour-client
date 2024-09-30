@@ -7,28 +7,32 @@ import { useNavigate } from 'react-router-dom';
 
 const Review = () => {
     const [currentUser] = useGetUser()
-    const [rating, setRating]= useState(2)
+    const [rating, setRating]= useState(0)
+    const [hoverRating, setHoverRating] = useState(0)
     const axiosSecure = useAxiosSecure()
     const navigate = useNavigate()
-    console.log(currentUser);
+    // console.log(currentUser);
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm()
 
-    console.log(rating);
+    const totalStars = 5;
+    const ratingArray = Array.from({length: totalStars}, (v, i)=>i +1)
+    // console.log(rating);
 
-    const hanldeRating = (event) =>{
-        const value = parseInt(event.target.value)
-        // console.log(value);
-        setRating(value)
-    }
+    // const hanldeRating = (event) =>{
+    //     const value = parseInt(event.target.value)
+    //     // console.log(value);
+    //     setRating(value)
+    // }
     const handleReview = data =>{
         
         data.rating = rating 
         data.customerImage = currentUser.image
-        console.log(data);
+        data.email = currentUser.email
+        // console.log(data);
         axiosSecure.post('/reviews', data)
             .then(res => {
                 if(res.data.insertedId){
@@ -78,18 +82,20 @@ const Review = () => {
                             </div>
 
                         </div>
-                        <div className="rating my-3">
-                            <input onChange={hanldeRating} value='1' type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
-                            <input
-                                onChange={hanldeRating}
-                                value='2'
-                                type="radio" 
-                                name="rating-2"
-                                className="mask mask-star-2 bg-orange-400"
-                                defaultChecked />
-                            <input value='3' onChange={hanldeRating} type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
-                            <input value='4' onChange={hanldeRating} type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
-                            <input value='5' onChange={hanldeRating} type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
+                        <div className="rating my-3 space-x-3">
+                            {
+                                ratingArray.map(star => 
+                                    <input
+                                    className={`mask mask-star-2 ${star <= (hoverRating || rating)  ? 'bg-yellow-500' : 'bg-gray-500'}`}
+                                    onClick={()=> setRating(star)}
+                                    onMouseEnter={()=> setHoverRating(star)}
+                                    onMouseLeave={()=> setHoverRating(0)}
+                                    value={star}
+                                    key={star}
+                                    type="radio" 
+                                    name="rating" />
+                                )
+                            }
                         </div>
                         <div>
                         <input className='bg-pink py-3 cursor-pointer hover:bg-hPink w-44 rounded-md text-white mt-2' type="submit" value="Submit" />

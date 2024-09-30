@@ -24,8 +24,12 @@ const Review = () => {
     console.log(reviews);
 
     return (
-        <Container>
-            <div className='text-black'>
+        <div className='bg-slate-300 relative'>
+            <div className=' inset-0 bg-pink w-2/6 h-6 [clip-path:polygon(0_0,100%_0,96%_100%,0_100%)]'>
+
+            </div>
+            <Container>
+            <div className='text-black '>
                 <div className='text-center pt-16'><h3 className='text-3xl font-bold'>Testimonials</h3></div>
                 <div className='min-h-[70vh] flex items-center'>
                     <Swiper
@@ -55,7 +59,7 @@ const Review = () => {
                                                 <h5 className=''> {review.designation} </h5>
                                             </div>
                                         </div>
-                                        <p className='text-[#606268] text-left'> {review.description}  </p>
+                                        <p className='text-[#606268] text-left'> {review.description.slice(0,120)}  </p>
                                         <div className="rating rating-md">
                                             <input type="radio" defaultChecked={review.rating === 1} name="" className="mask mask-star-2 bg-orange-400" />
                                             <input
@@ -80,6 +84,7 @@ const Review = () => {
                 </div>
             </div>
         </Container>
+        </div>
     );
 };
 

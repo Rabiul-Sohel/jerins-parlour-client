@@ -16,13 +16,15 @@ const MainLayout = () => {
     } else if (location.pathname === '/') {
         return <div>
             <div className='bg-[#FFF8F5] text-[#474747]'>
-                <Container>
-                    <Navbar></Navbar>
+                
+                    <div className='sticky w-full top-0 z-50' >
+                        <Navbar ></Navbar>
+                    </div>
                     <Banner></Banner>
-                </Container>
+                
 
-            </div>
             <Outlet></Outlet>
+            </div>
         </div>
     } else {
         return (

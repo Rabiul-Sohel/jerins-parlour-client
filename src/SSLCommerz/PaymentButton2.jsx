@@ -7,14 +7,16 @@ const PaymentButton2 = ({service}) => {
     const [currentUser] = useGetUser()
     const [loading, setLoading] = useState(false)
     const axiosSecure = useAxiosSecure()
+    const [activeBtn, setActiveBtn] = useState(true)
     const order = {
         serviceId: service?._id,
-        customerName: currentUser.name,
-        customerEmail: currentUser.email
+        name: currentUser.name,
+        email: currentUser.email
     }
 
     const handlePayment = ()=>{
         setLoading(true)
+        setActiveBtn(false)
         axiosSecure.post('/payment-initiate',order)
             .then(res => {
                 if(res.data.url){
@@ -25,7 +27,7 @@ const PaymentButton2 = ({service}) => {
 
     }
     return (
-        <button className="bg-pink hover:bg-hPink text-white px-5 w-1/2 py-3 rounded-md" onClick={handlePayment} >Pay Now</button>
+        <button disabled={!activeBtn} className="bg-pink hover:bg-hPink text-white px-5 w-1/2 py-3 rounded-md" onClick={handlePayment} >Pay Now</button>
     );
 };
 

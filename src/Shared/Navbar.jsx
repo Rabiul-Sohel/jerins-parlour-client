@@ -6,6 +6,8 @@ import { AuthContext } from "../Providers/AuthProviders";
 import useAuth from "../Hooks/useAuth";
 import Swal from "sweetalert2";
 import useGetUser from "../Hooks/useGetUser";
+// import { Polygon } from "recharts";
+import './style.navbar.css'
 
 
 const Navbar = () => {
@@ -14,8 +16,9 @@ const Navbar = () => {
     const user = authInfo?.user
     const logoutUser = authInfo?.logoutUser
     const [currentUser] = useGetUser()
+    // console.log(currentUser);
 
-    const handleLogout = ()=>{
+    const handleLogout = () => {
         logoutUser()
             .then(res => {
                 Swal.fire({
@@ -24,7 +27,7 @@ const Navbar = () => {
                     title: "Logged out successfully",
                     showConfirmButton: false,
                     timer: 1500
-                  });
+                });
             })
             .catch(err => console.log(err))
     }
@@ -33,7 +36,7 @@ const Navbar = () => {
             <NavLink to='/'>Home</NavLink>
         </li>
         <li>
-            <NavLink to='dashboard/dashboard'>Dashboard</NavLink>
+            <NavLink to={currentUser.isAdmin ? 'dashboard/adminHome' : 'dashboard/userHome'}>Dashboard</NavLink>
         </li>
         <li>
             <NavLink to='/portfolio'>Our Portfolio</NavLink>
@@ -46,13 +49,14 @@ const Navbar = () => {
         </li>
     </>
     return (
-        <div className="navbar">
-            <div className="navbar-start">
+        <div className=" flex justify-between bg-pink py-3 bg-opacity-80 uppercase text-white items-start relative">
 
-                <img className="w-36" src={logo} alt="" />
+            <div className=" absolute w-[300px] h-[100px] top-0 flex items-center   bg-white logo" >
+                <img className="w-2/3 left-3 object-cover absolute " src={logo} alt="" />
             </div>
 
-            <div className="navbar-end">
+
+            <div className="flex justify-end w-full  ">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
                         <svg

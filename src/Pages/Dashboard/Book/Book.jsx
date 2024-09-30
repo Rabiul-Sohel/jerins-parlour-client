@@ -11,6 +11,8 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import PaymentButton from '../../../SSLCommerz/PaymentButton';
 import PaymentButton2 from '../../../SSLCommerz/PaymentButton2';
 import commerzImg from '../../../assets/icons/icon-256x256.png'
+import bKashImg from '../../../assets/icons/BKash_Logo_icon.png'
+import BkashPayment from '../../../BkashPayment/BkashPayment';
 
 const Book = () => {
     const [currentUser] = useGetUser()
@@ -20,18 +22,18 @@ const Book = () => {
     const axiosSecure = useAxiosSecure()
     const price = Math.round(location.state?.price) * 100
     const service = location.state
-    console.log(service);
+    // console.log(service);
     // const roundedPrice = Math.round(price * 100)/100
 
-    useEffect(()=>{
-        const createPaymentIntect = async () =>{
-            if(location.state.price){
-                const {data} = await axiosSecure.post('/create-payment-intent', {amount: price})
-            setClientSecret(data.clientSecret)
+    useEffect(() => {
+        const createPaymentIntect = async () => {
+            if (location.state?.price) {
+                const { data } = await axiosSecure.post('/create-payment-intent', { amount: price })
+                setClientSecret(data.clientSecret)
             }
         }
         createPaymentIntect()
-    },[axiosSecure, price, location])
+    }, [axiosSecure, price, location])
     console.log(clientSecret);
     const {
         register,
@@ -103,20 +105,39 @@ const Book = () => {
                                 <img className='w-5' src={commerzImg} alt="" />
                                 <p> SSLCommerz </p>
                             </div>
+                            <div className='flex items-center space-x-1'>
+                                <input
+                                    onChange={handlePaymentMethod}
+                                    checked={paymentMethod === 'bKash'}
+                                    value='bKash'
+                                    name='paymentMethod'
+                                    type="radio" id="" />
+                                <img className='w-5' src={bKashImg} alt="" />
+                                <p> bKash Payment </p>
+                            </div>
 
                         </form>
 
                     </div>
                     {
-                        paymentMethod === 'Credit Card' && 
-                        <StripeProvider>
-                            <PaymentForm clientSecret={clientSecret} booking={location.state} paymentMethod={paymentMethod}></PaymentForm>
-                        </StripeProvider>
-                    }
-                    {
-                      paymentMethod === 'SSLCommerz' && 
-                     
-                      <PaymentButton2  service={service}></PaymentButton2>
+                        location.state && <div>
+                            {
+                                paymentMethod === 'Credit Card' &&
+                                <StripeProvider>
+                                    <PaymentForm clientSecret={clientSecret} service={location.state} paymentMethod={paymentMethod}></PaymentForm>
+                                </StripeProvider>
+                            }
+                            {
+                                paymentMethod === 'SSLCommerz' &&
+
+                                <PaymentButton2 service={service}></PaymentButton2>
+                            }
+                            {
+                                paymentMethod === 'bKash' &&
+
+                                <BkashPayment service={service}></BkashPayment>
+                            }
+                        </div>
                     }
                 </div>
             </div>

@@ -14,6 +14,7 @@ const AddService = () => {
     const axiosSecure = useAxiosSecure()
     const axiosPublic = useAxiosPublic()
     const [imagePreview, setImagePreview] = useState(null)
+    const [imageUrl, setImageUrl] = useState('')
     console.log(location);
     const {
         register,
@@ -53,9 +54,13 @@ const AddService = () => {
             .then(res => {
                 // console.log(res.data.data.url)
                 if (res.data.success) {
-                    const title = data.title
+                    setImageUrl(res.data.data.url)
+                   
+                }
+            })
+            const title = data.title
                     const description = data.description
-                    const image = res.data.data.url
+                    const image = imageUrl || null
                     const price = parseInt(data.price)
                     const service = {
                         title,
@@ -64,20 +69,18 @@ const AddService = () => {
                         price,
                     }
                     axiosSecure.post('/services', service)
-                        .then(res => {
-                            if (res.data.insertedId) {
-                                Swal.fire({
-                                    position: "top-end",
-                                    icon: "success",
-                                    title: "Your service has been saved",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                reset()
-                            }
-                        })
-                }
-            })
+                    .then(res => {
+                        if (res.data.insertedId) {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Your service has been saved",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            reset()
+                        }
+                    })
 
         // console.log(data.image[0]);
     }

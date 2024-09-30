@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import useAxiosSecure from '../Hooks/useAxiosSecure';
 
-const PaymentForm = ({clientSecret, booking, paymentMethod}) => {
+const PaymentForm = ({clientSecret, service, paymentMethod}) => {
     const stripe = useStripe()
     const elements = useElements()
     const location = useLocation()
@@ -35,12 +35,14 @@ const PaymentForm = ({clientSecret, booking, paymentMethod}) => {
             setError(error.message)
         } else if (paymentIntent.status === 'succeeded') {
             const order = {
-                customerName: currentUser.name,
-                customerEmail: currentUser.email,
-                booking,
+                name: currentUser.name,
+                email: currentUser.email,
+                service,
                 transactionId: paymentIntent.id,
                 status:'Pending',
-                paymentMethod
+                paymentMethod,
+                paidStatus: true
+
             }
             console.log(order);
             setSuccess(true)
@@ -56,7 +58,7 @@ const PaymentForm = ({clientSecret, booking, paymentMethod}) => {
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    navigate('/success')
+                    navigate('/')
                 }
              })
            

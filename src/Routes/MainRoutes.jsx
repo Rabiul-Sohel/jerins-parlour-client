@@ -15,7 +15,12 @@ import BookingList from "../Pages/Dashboard/BookingList/BookingList";
 import Review from "../Pages/Dashboard/Review/Review";
 import PaymentSuccess from "../Pages/PaymentSuccess/PaymentSuccess";
 import PaymentFail from "../Pages/PaymentFail/PaymentFail";
-
+import useAuth from "../Hooks/useAuth";
+import useGetUser from "../Hooks/useGetUser";
+import AdminHome from "../Pages/Dashboard/AdminHome/AdminHome";
+import UserHome from "../Pages/Dashboard/UserHome/UserHome";
+import PaymentError from "../Pages/Dashboard/PaymentError/PaymentError";
+// const [currentUser] = useGetUser()
 const router = createBrowserRouter([
     {
         path: '/',
@@ -37,18 +42,27 @@ const router = createBrowserRouter([
                 path: 'payment/success/:tranId',
                 element: <PaymentSuccess></PaymentSuccess>
             },
-            {
-                path: 'payment/fail/:tranId',
-                element: <PaymentFail></PaymentFail>
-            },
+           
             
             {
                 path: 'dashboard',
                 element: <PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
                 children:[
                     {
-                        path: 'dashboard',
-                        element: <DashboardHome></DashboardHome>
+                        path: 'adminHome',
+                        element: <AdminHome></AdminHome>
+                    },
+                    {
+                        path: 'success',
+                        element: <PaymentSuccess></PaymentSuccess>
+                    },
+                    {
+                        path: 'error',
+                        element: <PaymentError></PaymentError>
+                    },
+                    {
+                        path: 'userHome',
+                        element: <UserHome></UserHome>
                     },
                     {
                         path: 'users',

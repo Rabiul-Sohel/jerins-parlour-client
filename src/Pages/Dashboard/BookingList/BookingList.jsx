@@ -13,7 +13,7 @@ const BookingList = () => {
             return response.data;
         }
     })
-    // console.log(bookings);
+    console.log(bookings);
     
     return (
         <div>
@@ -24,24 +24,24 @@ const BookingList = () => {
             <div className="max-w-4xlxl p-10 bg-[#F4F7FC] min-h-[90vh] grid grid-cols-2 gap-8">
                 {
                     bookings.map(booking =>
-                        <div key={booking._id} className="card bg-base-100 max-h-60 w-96 text-black ">
+                        <div key={booking._id} className="card bg-base-100 max-h-60 w-96  ">
                             <div className="card-body">
                                 <div className='flex justify-between mb-3'>
-                                    <img className='w-16' src={booking.booking?.image} alt="" />
+                                    <img className='w-16' src={booking.service?.image} alt="" />
                                     <div>
                                         {
-                                            booking.status === 'Pending' && <h5 className='bg-[#FFE3E3] w-24 text-center text-[#FF4545] px-4 py-2 rounded-md shadow-md'> {booking.status} </h5>
+                                            booking.deliveryStatus === 'Pending' && <h5 className='bg-[#FFE3E3] w-24 text-center text-[#FF4545] px-4 py-2 rounded-md shadow-md'> {booking.deliveryStatus} </h5>
                                         }
                                         {
-                                            booking.status === 'Done' && <h5 className='bg-[#C6FFE0] text-[#009444] w-24 text-center px-4 py-2 rounded-md shadow-md'> {booking.status} </h5>
+                                            booking.deliveryStatus === 'Done' && <h5 className='bg-[#C6FFE0] text-[#009444] w-24 text-center px-4 py-2 rounded-md shadow-md'> {booking.deliveryStatus} </h5>
                                         }
                                         {
-                                            booking.status === 'On going' && <h5 className='bg-[#fceddb] text-[#FFBD3E]  text-center px-4 py-2 rounded-md shadow-md'> {booking.status} </h5>
+                                            booking.deliveryStatus === 'On going' && <h5 className='bg-[#fceddb] text-[#FFBD3E]  text-center px-4 py-2 rounded-md shadow-md'> {booking.deliveryStatus} </h5>
                                         }
                                     </div>
                                 </div>
-                                <h2 className="card-title"> {booking.booking?.title} </h2>
-                                <p className='text-[#606268]'> {booking.booking?.description} </p>
+                                <h2 className="card-title"> {booking.service?.title} </h2>
+                                <p className='text-[#606268]'> {booking.service.description} </p>
 
                             </div>
                         </div>)

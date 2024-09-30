@@ -8,9 +8,11 @@ import Container from '../../../Shared/Container';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import useGetUser from '../../../Hooks/useGetUser';
 
 const Services = () => {
     const axiosSecure = useAxiosSecure()
+    const [currentUser] = useGetUser()
     const {data:services=[]} = useQuery({
         queryKey: ['services'],
         queryFn: async()=>{
@@ -19,7 +21,7 @@ const Services = () => {
         }
     })
 
-    console.log(services);
+    // console.log(services);
     return (
         <Container>
             <div className='text-center pb-16 pt-10'>
@@ -29,7 +31,7 @@ const Services = () => {
                 <Animation>
                     <div className='flex gap-5'>
                         {
-                            services.map(service => <Link key={service._id} state={service} to='/dashboard/book' className="card bg-base-100 hover:shadow-xl ">
+                            services.map(service => <Link key={service._id} state={service} to={currentUser.isAdmin ? '/dashboard/adminHome' : 'dashboard/book' } className="card bg-base-100 hover:shadow-xl ">
                                 <figure className="px-10 pt-10">
                                     <img src={service.image}
                                         alt="Anti Age Face Treatment"

@@ -14,6 +14,7 @@ const OrderList = () => {
             return response.data
         }
     })
+    // console.log(orders);
     const handleOrderStatus = (e, id) =>{
         const status = e.target.value
          axiosSecure.patch(`/orders/${id}`, {status})
@@ -29,6 +30,25 @@ const OrderList = () => {
                       refetch()
                 }
             })
+    }
+    const handleBkashRefund = async(trxID) =>{
+        try {
+            const {data} = await axiosSecure.post(`/bkash/payment/refund/${trxID}`)
+            if(data.response.modifiedCount){
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Refunded Successfull",
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+                  refetch()
+            }
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+        // console.log(trxID);
     }
 
    
@@ -46,10 +66,12 @@ const OrderList = () => {
                             <tr className="leading-7">
                                 
                                 <th className="rounded-l-md bg-[#F5F6FA] ">Name</th>
-                                <th className="bg-[#F5F6FA]">Email ID</th>
+                                {/* <th className="bg-[#F5F6FA]">Email ID</th> */}
                                 <th className="bg-[#F5F6FA]">Service</th>
                                 <th className="bg-[#F5F6FA]">Pay With</th>
-                                <th className="bg-[#F5F6FA] rounded-r-md">Status</th>
+                                <th className="bg-[#F5F6FA]">Payment Status</th>
+                                <th className="bg-[#F5F6FA] ">Status</th>
+                                <th className="bg-[#F5F6FA] rounded-r-md">Action</th>
                             </tr>
                         </thead>
                         <tbody className="leading-10 text-sm ">
@@ -57,17 +79,23 @@ const OrderList = () => {
                             {
                                 orders.map(order => <tr key={order._id} className="">
                                 
-                                    <td className=""> {order.customerName} </td>
-                                    <td> {order.customerEmail} </td>
-                                    <td> {order.booking?.title} </td>
+                                    <td className=""> {order.name} </td>
+                                    {/* <td> {order.email} </td> */}
+                                    <td> {order.service?.title} </td>
                                     <td> {order.paymentMethod} </td>
+                                    <td> {order.paymentStatus} </td>
                                     <td>
                                         
-                                        <select onChange={(e)=>handleOrderStatus(e, order._id)} className={`${order.status === 'Pending' ? 'text-red-500': order.status === 'Done' ? 'text-green-500' : 'text-yellow-500'} `} defaultValue={order.status}  >
+                                        <select onChange={(e)=>handleOrderStatus(e, order._id)} className={`${order.deliveryStatus === 'Pending' ? 'text-red-500': order.deliveryStatus === 'Done' ? 'text-green-500' : 'text-yellow-500'} `} defaultValue={order.deliveryStatus}  >
                                             <option value="Pending">Pending</option>
                                             <option value="On going">On going</option>
                                             <option value="Done">Done</option>
                                         </select>
+                                    </td>
+                                    <td>
+                                        {
+                                            order.paymentStatus === 'Successfull' && <button onClick={()=>handleBkashRefund(order.paymentInfo.trxID)} className="btn">Refund</button>
+                                        }
                                     </td>
                                 </tr>)
                             }
